@@ -1,0 +1,14 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
+  background-color: #f5f7f6;
+  color: #23292d;
+}
+
+#root {
+  min-height: 100vh;
+}
