@@ -1,6 +1,29 @@
 # Prompt Log
 
-Chronological log of the prompts used to build this project end-to-end with Claude Code. Verbatim, typos included.
+## Purpose
+
+This document is a transparency record of how the Office Food Feedback System was built using Claude Code as an AI pair-programmer. It captures every prompt that produced a code change, an architectural decision, or a piece of documentation — in the order given, verbatim (typos included) — so the development process is fully auditable and reproducible.
+
+## Methodology
+
+- One initial specification prompt defined the full scope, architecture, and acceptance bar up front.
+- The build was executed incrementally across five reviewed milestones (base components → Redux → feature components → containers → persistence/mock backend), rather than as one unreviewed pass.
+- Follow-up prompts were iterative refinements — architectural questions, bug reports, and feature requests — applied on top of a working, typechecked, and build-verified codebase at every step.
+- Every code-producing prompt below is paired with a one-line summary of the resulting change for quick scanning.
+
+## Summary
+
+| Category | Count | Examples |
+|---|---|---|
+| Specification | 1 | Full implementation spec (#1) |
+| Milestone progression | 4 | "whats next", "Ok next", "next" (#3, #4, #7) |
+| Architecture discussion | 1 | Redux vs. `useReducer` (#5) |
+| Feature addition | 4 | Console logging, validation toast, error handling, dirty-check on Next (#8, #14–#16) |
+| Code review / correction | 1 | `className` prop removal for variant-only styling (#2) |
+| Codebase walkthroughs | 4 | Render chain, feature composition, folder structure (#10–#13) |
+| Documentation | 2 | README rewrite, acceptance criteria + test cases (#17, #18) |
+
+## Log
 
 1. **Initial spec:**
 
@@ -533,11 +556,11 @@ Chronological log of the prompts used to build this project end-to-end with Clau
 14. > We even need to build the error handling to api, if api fails we need to tell user its failing, so error handling for this app needs to be added
     → Added try/catch around all 3 mock API calls, error toasts, and a retry screen for initial load failure.
 
-15. > I see certain issues, when the user has already filled form, why are we again doing api call when we click on next you need to check if the user has made any chaneg in the filled form, only then we need to do api call and local storage upadte, if not the user is just navigating to another page, inst it?
-    → Added a last-saved-values snapshot (`lastSavedResponsesRef`) and a dirty-check in `handleNext` — skips `saveDraft`/`saveStep` when the current tab's values are unchanged.
+15. > We need to throw a toast as validtion if the validation is not met, means the requireed fieleds aere not addressed. while clicking on next
+    → Added a reusable `Toast` component and wired it into `FeedbackFormContainer` — fires on Next/Submit validation failure, alongside the existing inline field errors.
 
-16. > Can you create a repository in github, not in talview, in github and push this up ther
-    → Created public GitHub repo `SudharshanPaniDev/office-food-feedback`, initial commit, pushed.
+16. > I see certain issues, when the user has already filled form, why are we again doing api call when we click on next you need to check if the user has made any chaneg in the filled form, only then we need to do api call and local storage upadte, if not the user is just navigating to another page, inst it?
+    → Added a last-saved-values snapshot (`lastSavedResponsesRef`) and a dirty-check in `handleNext` — skips `saveDraft`/`saveStep` when the current tab's values are unchanged.
 
 17. > Can we clearly mention the readme of the repo?
     → Replaced Vite boilerplate README with real architecture/data-flow/run docs.
@@ -545,5 +568,6 @@ Chronological log of the prompts used to build this project end-to-end with Clau
 18. > In the readme can we mentipn the test cases and acceptance criteria
     → Added Acceptance Criteria checklist and Test Cases table (TC1–TC12) to README.
 
-19. > In prompt log, can we remove the hydrateResponses entry, and can we have the main prompt which we used to generate this code
-    → Removed the `hydrateResponses` Q&A entry, expanded entry 1 to the full original spec text.
+## Outcome
+
+18 prompts, 1 specification, produced a working, typechecked, and build-verified application: a config-driven 3-tab feedback form on Redux Toolkit, with per-tab validation, inline + toast error surfacing, dirty-tracked draft persistence to `localStorage`, a mocked backend with simulated latency and console-visible calls, and graceful degradation (retry screen, error toasts) when that mocked backend fails. Every review checkpoint the spec asked for (base components, Redux, feature components, containers, persistence) was paused on and confirmed before the next stage began.
